@@ -6,7 +6,9 @@ function App() {
 
   return (
     <>
-      <h1>Blog</h1>
+    <div className='text-2xl'>
+            Blog
+    </div>
     </>
   )
 }

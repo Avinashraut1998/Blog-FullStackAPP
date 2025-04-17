@@ -1,14 +1,14 @@
-
+import { Outlet } from 'react-router'
 import './App.css'
+import Nav from './pages/landingPage/Nav'
 
 function App() {
 
 
   return (
     <>
-    <div className='text-2xl'>
-            Blog
-    </div>
+     <Nav />
+     <Outlet />
     </>
   )
 }

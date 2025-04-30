@@ -7,6 +7,7 @@ import {
   createRoutesFromElements,
   Route,
   RouterProvider,
+  Routes,
 } from "react-router-dom";
 import LandingPage from './pages/landingPage/LandingPage.jsx'
 import Articles from './pages/landingPage/Articles.jsx'
@@ -14,26 +15,36 @@ import Gallery from './pages/landingPage/Gallery.jsx'
 import About from './pages/landingPage/About.jsx';
 import Contact from './pages/landingPage/Contact.jsx';
 import Login from './admin/Login.jsx';
+import ForgetPassword from './admin/ForgetPassword.jsx';
 
 
 
 
 const router = createBrowserRouter(
   createRoutesFromElements(
+  
+    <>
     <Route path="/" element={<App />} >
- 
- {/* LandingPage-Routes */}
 
-         <Route index element={<LandingPage/>} />
-         <Route path='/about' element={<About />} />
-         <Route path='/gallery' element={<Gallery />} />
-         <Route path='/article' element={<Articles />} />
-         <Route path='/contact' element={<Contact />} />
+      {/* LandingPage-Routes */}
 
-         {/* Admin page routes */}
-
-         <Route path='/admin/login' element={<Login />} />
+      <Route index element={<LandingPage />} />
+      <Route path='/about' element={<About />} />
+      <Route path='/gallery' element={<Gallery />} />
+      <Route path='/article' element={<Articles />} />
+      <Route path='/contact' element={<Contact />} />
     </Route >
+  
+
+    //     {/* Admin page routes */ }
+      <Route path="/admin-login" element={<Login />} />
+       <Route path="/admin-login/forgetpass" element={<ForgetPassword />} />
+  
+    
+   
+    </>
+
+   
   )
 )
 

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router"
+import { Link, NavLink, useNavigate } from "react-router"
 
 const Nav = () => {
   
@@ -10,13 +10,15 @@ const Nav = () => {
 
   return (
     <>
-    <div className="flex justify-between p-10 border-2  font-mono  bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+    <div className="flex justify-between p-10 border-2  font-mono  bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-300 dark:border-gray-400">
         <div onClick={handleClick} className="cursor-pointer">Logo</div>
         <div className="flex gap-5 
         ">
-            <Link to='/'>
-            <div>Home</div>
-            </Link>
+            <NavLink  to='/' className={({isActive}) => 
+              `  ${isActive ? "text-amber-500 bg-amber-400" : "text-yellow-900"}`
+            }>
+            <div >Home</div>
+            </NavLink>
             <Link to='/about'>
             <div>About</div>
             </Link>

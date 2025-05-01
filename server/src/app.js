@@ -7,11 +7,17 @@ import { connectDB } from './config/db.js';
 
 const app = express();
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT ;
 
 app.use(express.json());
 
-app.get("/", (req, res) =>  res.json({ message: "App is Working" }))
+app.get("/", (req, res) =>  res.json({ message: "Server is Working" }))
+
+// Import user routes
+import userRouter from "./routes/user.routes.js";
+
+// console.log("user router", userRouter);
+app.use("/api/v1/users", userRouter);
 
 
 app.use((req, res) => {

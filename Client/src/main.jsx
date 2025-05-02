@@ -15,7 +15,7 @@ import Gallery from './pages/landingPage/Gallery.jsx'
 import About from './pages/landingPage/About.jsx';
 import Contact from './pages/landingPage/Contact.jsx';
 import Login from './admin/Login.jsx';
-import ForgetPassword from './admin/ForgetPassword.jsx';
+import PasswordReset from './admin/PasswordReset.jsx';
 
 
 
@@ -38,7 +38,7 @@ const router = createBrowserRouter(
 
     //     {/* Admin page routes */ }
       <Route path="/admin-login" element={<Login />} />
-       <Route path="/admin-login/forgetpass" element={<ForgetPassword />} />
+       <Route path="/admin-login/forgetpass" element={<PasswordReset />} />
   
     
    

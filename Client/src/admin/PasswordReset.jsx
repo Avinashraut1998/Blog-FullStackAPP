@@ -1,0 +1,154 @@
+import { useState } from "react";
+
+const PasswordReset = () => {
+  let [showEmail, setShowEmail] = useState(true);
+  let [showOtp, setShowOtp] = useState(false);
+  let [showPassword, setShowPassword] = useState(false);
+
+  let [email, setEmail] = useState("");
+  let [otp, setOtp] = useState("");
+  let [newPassword, setNewPassword] = useState("");
+  let [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleSendOtp = (e) => {
+    e.preventDefault();
+
+    console.log(email);
+    setShowEmail(false);
+    setShowOtp(true);
+  };
+
+  const handleSubmitOtp = (e) => {
+    e.preventDefault();
+
+    console.log(otp);
+
+    setShowOtp(false);
+    setShowPassword(true)
+  };
+
+  const handleResetPassword = (e) => {
+    e.preventDefault();
+
+    console.log(newPassword, confirmPassword);
+  };
+
+  return (
+    <section className="bg-gray-50 dark:bg-gray-900 min-h-screen">
+      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <div className="w-full bg-white rounded-lg shadow dark:border sm:max-w-md dark:bg-gray-800 dark:border-gray-700 p-6 sm:p-8">
+          <h2 className="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+            Change Password
+          </h2>
+
+          <form className="mt-4 space-y-4 lg:mt-5 md:space-y-5">
+            {/* Email Step */}
+
+            {showEmail && (
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Your email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter Your Email Here"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                  required
+                />
+                <button
+                  onClick={handleSendOtp}
+                  className="w-full mt-4 text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                >
+                  Send OTP
+                </button>
+              </div>
+            )}
+
+            {/* OTP Step */}
+
+            {showOtp && (
+              <div>
+                <label
+                  htmlFor="otp"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Enter OTP
+                </label>
+                <input
+                  type="text"
+                  id="otp"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  placeholder="Enter the OTP sent to your email"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                  required
+                />
+                <button
+                  onClick={handleSubmitOtp}
+                  className="w-full mt-4 text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                >
+                  Submit OTP
+                </button>
+              </div>
+            )}
+
+            {/* Password Reset Step */}
+
+            {showPassword && (
+              <>
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    New Password
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Enter New Password"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="confirm-password"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Confirm Password
+                  </label>
+                  <input
+                    type="password"
+                    id="confirm-password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Enter Confirm Password"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                    required
+                  />
+                </div>
+
+                <button
+                  onClick={handleResetPassword}
+                  className="w-full mt-4 text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
+                >
+                  Reset Password
+                </button>
+              </>
+            )}
+          </form>
+        </div>
+      </div>
+    </section>
+  );
+};
+export default PasswordReset;

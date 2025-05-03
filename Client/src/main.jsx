@@ -15,7 +15,7 @@ import Gallery from './pages/landingPage/Gallery.jsx'
 import About from './pages/landingPage/About.jsx';
 import Contact from './pages/landingPage/Contact.jsx';
 import Login from './admin/Login.jsx';
-import ForgetPassword from './admin/ForgetPassword.jsx';
+import PasswordReset from './admin/PasswordReset.jsx';
 
 
 
@@ -25,20 +25,20 @@ const router = createBrowserRouter(
   
     <>
     <Route path="/" element={<App />} >
- 
- {/* LandingPage-Routes */}
+
+      {/* LandingPage-Routes */}
 
       <Route index element={<LandingPage />} />
-         <Route path='/about' element={<About />} />
-         <Route path='/gallery' element={<Gallery />} />
-         <Route path='/article' element={<Articles />} />
-         <Route path='/contact' element={<Contact />} />
+      <Route path='/about' element={<About />} />
+      <Route path='/gallery' element={<Gallery />} />
+      <Route path='/article' element={<Articles />} />
+      <Route path='/contact' element={<Contact />} />
     </Route >
   
 
     //     {/* Admin page routes */ }
       <Route path="/admin-login" element={<Login />} />
-       <Route path="/admin-login/forgetpass" element={<ForgetPassword />} />
+       <Route path="/admin-login/forgetpass" element={<PasswordReset />} />
   
     
    

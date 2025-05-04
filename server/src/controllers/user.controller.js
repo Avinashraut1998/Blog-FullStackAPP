@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
 
 const createUser = async (req, res) => {
@@ -50,14 +51,25 @@ const loginUser = async (req, res) => {
 
         if (!isPasswordCorrect) res.status(401).json({ error: "Invalid credentials" });
 
-        let accesssToken = await user.generateAccessToken();
-        // let refreshToken = await user.createRefreshToken();
+        let accessToken = await user.createAccessToken();
+        let refreshToken = await user.createRefreshToken();
 
+        user.refreshToken = refreshToken;
+        await user.save({ validateBeforeSave: false })
+
+        const options = {
+            httpOnly: true,
+            secure: true,
+            // maxAge: 24 * 60 * 60 * 1000
+        }
         user.password = '';
-        res.status(200).json({
+        user.refreshToken = '';
+        res.status(200)
+        .cookie('refreshToken', refreshToken, options)
+        .json({
             body: {
                 user,
-                accesssToken
+                accessToken
             },
             message: "User logged in successfully"
         })
@@ -70,4 +82,55 @@ const getUserDetails = async (req, res) => {
     return res.status(200).json({ user: req.user, message: "User details fetched successfully" });
 }
 
-export { createUser, loginUser, getUserDetails };
+const logoutUser = async (req, res) => {
+    const userId = req.user._id;
+    try {
+        const options = { httpOnly: true, secure: true }
+        await User.findOneAndUpdate({ _id: userId }, { $set: { refreshToken: null } });
+        return res.status(200)
+            .clearCookie('refreshToken', options)
+            .json({ message: "User logged out successfully" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+const refreshAccessToken = async (req, res) => {
+    const incomingRefreshToken  = req.cookies.refreshToken;
+
+    if(!incomingRefreshToken) return res.status(401).json({ error: "Unauthorized Request" });
+    try {
+
+        const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+        const user = await User.findOne({ _id: decodedToken._id });
+
+        if (!user || user.refreshToken !== incomingRefreshToken) {
+            return res.status(401).json({ error: "Invalid or expired refresh token" });
+          }
+
+          
+        if( user.refreshToken !== incomingRefreshToken) return res.status(401).json({ error: "Refresh token is expired or used" });
+    
+        const newRefreshToken = await user.createRefreshToken();
+        const newAccessToken = await user.createAccessToken();
+
+        user.refreshToken = newRefreshToken;
+        await user.save({ validateBeforeSave: false });
+
+        const options = {
+            httpOnly: true,
+            secure: true,
+            // maxAge: 24 * 60 * 60 * 1000
+        }
+        res.cookie('refreshToken', newRefreshToken, options);
+        res.status(200).json(
+            { body: { 'accessToken': newAccessToken },
+             message: 'Access token created successfully'
+            });
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+export { createUser, loginUser, getUserDetails,logoutUser ,refreshAccessToken};

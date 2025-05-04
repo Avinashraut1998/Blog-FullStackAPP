@@ -65,6 +65,9 @@ const userSchema = mongoose.Schema(
             lowercase: true,
             default: "user",
         },
+        refreshToken : {
+            type : String
+        }
     },
     { timestamps: true }
 )
@@ -84,7 +87,7 @@ userSchema.methods.checkPassword = async function (password) {
     return await bcrypt.compare(password, this.password);
 }
 
-userSchema.methods.generateAccessToken = async function () {
+userSchema.methods.createAccessToken = function () {
     return jwt.sign({
         _id : this._id,
         email: this.email,
@@ -92,6 +95,15 @@ userSchema.methods.generateAccessToken = async function () {
         lastName : this.lastName
     }, process.env.ACCESS_TOKEN_SECRET, 
     { expiresIn: '1d' }
+);
+}
+
+userSchema.methods.createRefreshToken = function () {
+    return jwt.sign({
+        _id: this._id,
+        email: this.email
+    }, process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: '10d' }
 );
 }
 export const User = mongoose.model("User", userSchema);

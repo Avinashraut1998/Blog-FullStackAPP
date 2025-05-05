@@ -4,12 +4,14 @@ dotenv.config()
 import express from 'express';
 import path from 'path';
 import { connectDB } from './config/db.js';
+import  cookieParser  from 'cookie-parser'
 
 const app = express();
 
 const PORT = process.env.PORT ;
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.get("/", (req, res) =>  res.json({ message: "Server is Working" }))
 

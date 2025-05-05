@@ -133,4 +133,60 @@ const refreshAccessToken = async (req, res) => {
     }
 }
 
-export { createUser, loginUser, getUserDetails,logoutUser ,refreshAccessToken};
+const forgetPassword = async ( req, res ) => {
+ const { email } = req.body;
+
+ if(!email) return res.status(400).json({ error: "Email is required" });
+
+  try {
+    const existingUser = await User.findOne({ email });
+
+    if(!existingUser) return res.status(404).json({ error: "User not found" });
+
+    const otp = await existingUser.createResetPasswordToken();
+    
+    await existingUser.save({ validateBeforeSave: false });
+
+    res.status(200)
+    .json({body: {
+        otp : otp
+    }, message: "OTP sent successfully"});
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const resetPassword = async (req, res) => {
+    const { email, otp, newPassword } = req.body;
+
+    if (!email || !otp || !newPassword) return res.status(400).json({ error: "All fields are required" });
+
+    try {
+        const existingUser = await User.findOne({ email });
+
+        if (!existingUser) return res.status(404).json({ error: "User not found" });
+
+        console.log(existingUser, otp)
+        const isOptValid = existingUser.resetOtp !== otp;
+
+        if (isOptValid) return res.status(400).json({ error: "Invalid OTP" });
+
+        const isOptExpired = existingUser.resetOtpExpiry < Date.now();
+
+        if (isOptExpired) return res.status(400).json({ error: "OTP is expired" });
+
+        existingUser.password = newPassword;
+        existingUser.resetOtp = null;
+        existingUser.resetOtpExpiry = null;
+
+        await existingUser.save({ validateBeforeSave: false });
+
+        res.status(200).json({ message: "Password reset successfully" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+
+}
+
+export { createUser, loginUser, getUserDetails,logoutUser ,refreshAccessToken,forgetPassword,resetPassword};

@@ -67,6 +67,12 @@ const userSchema = mongoose.Schema(
         },
         refreshToken : {
             type : String
+        },
+        resetOtp : {
+            type : String
+        },
+        resetOtpExpiry : {
+            type : Date
         }
     },
     { timestamps: true }
@@ -105,6 +111,15 @@ userSchema.methods.createRefreshToken = function () {
     }, process.env.REFRESH_TOKEN_SECRET,
     { expiresIn: '10d' }
 );
+}
+
+userSchema.methods.createResetPasswordToken = function () {
+
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    this.resetOtp = otp;
+    const oneMinute = 60 * 1000;
+    this.resetOtpExpiry = Date.now() + 10 * oneMinute;
+    return otp;
 }
 export const User = mongoose.model("User", userSchema);
 

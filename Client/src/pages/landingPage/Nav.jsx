@@ -10,29 +10,58 @@ const Nav = () => {
 
   return (
     <>
-    <div className="flex justify-between p-10 border-2  font-mono  bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-300 dark:border-gray-400">
-        <div onClick={handleClick} className="cursor-pointer">Logo</div>
-        <div className="flex gap-5 
-        ">
-            <NavLink  to='/' className={({isActive}) => 
-              `  ${isActive ? "text-amber-500 bg-amber-400" : "text-yellow-900"}`
-            }>
-            <div >Home</div>
-            </NavLink>
-            <Link to='/about'>
-            <div>About</div>
-            </Link>
-            <Link to='/gallery'>
-            <div>Gallery</div>
-            </Link>
-            <Link to='/article'>
-            <div>Article</div>
-            </Link>
-            <Link to='/contact'>
-            <div>Contact-Us</div>
-            </Link>
+        <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700 border-b shadow">
+      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        {/* Logo */}
+        <div onClick={handleClick} className="cursor-pointer text-xl font-semibold text-gray-900 dark:text-white">
+          Logo
         </div>
-    </div>
+
+        {/* Navigation Links */}
+        <div className="flex space-x-4 text-sm font-medium text-gray-700 dark:text-gray-200">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `px-3 py-2 rounded-lg ${
+                isActive
+                  ? "bg-amber-400 text-white"
+                  : "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+              }`
+            }
+          >
+            Home
+          </NavLink>
+
+          <Link
+            to="/about"
+            className="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+          >
+            About
+          </Link>
+
+          <Link
+            to="/gallery"
+            className="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+          >
+            Gallery
+          </Link>
+
+          <Link
+            to="/article"
+            className="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+          >
+            Article
+          </Link>
+
+          <Link
+            to="/contact"
+            className="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+          >
+            Contact Us
+          </Link>
+        </div>
+      </div>
+    </nav>
     </>
   )
 }

@@ -5,11 +5,13 @@ import express from 'express';
 import path from 'path';
 import { connectDB } from './config/db.js';
 import  cookieParser  from 'cookie-parser'
+import cors from 'cors'
 
 const app = express();
 
 const PORT = process.env.PORT ;
 
+app.use(cors())
 app.use(express.json());
 app.use(cookieParser());
 

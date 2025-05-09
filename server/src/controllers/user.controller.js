@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
+import { sendOtpEmail } from "../services/mailer.service.js";
 
 const createUser = async (req, res) => {
 
@@ -146,6 +147,8 @@ const forgetPassword = async ( req, res ) => {
     const otp = await existingUser.createResetPasswordToken();
     
     await existingUser.save({ validateBeforeSave: false });
+    
+    sendOtpEmail('Demo App <demo@demomailtrap.co>',existingUser.email, ' reset password', otp)
 
     res.status(200)
     .json({body: {

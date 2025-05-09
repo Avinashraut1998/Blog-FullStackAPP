@@ -18,6 +18,7 @@ import Login from "./admin/Login.jsx";
 import PasswordReset from "./admin/PasswordReset.jsx";
 import AdminDashboard from "./admin/AdminDashboard.jsx";
 import ProtectedRoute from "./utils/ProtectedRoute.jsx";
+import LoginHookForm from "./admin/LoginHookForm.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,7 +33,7 @@ const router = createBrowserRouter(
         <Route path="/contact" element={<Contact />} />
       </Route>
       // {/* Admin page routes */}
-      <Route path="/admin-login" element={<Login />} />
+      <Route path="/admin-login" element={<LoginHookForm />} />
       <Route path="/admin-login/forgetpass" element={<PasswordReset />} />
       <Route path="/admin-login/admin-dashboard" element={<ProtectedRoute> <AdminDashboard /> </ProtectedRoute>} />
 

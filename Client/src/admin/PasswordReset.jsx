@@ -32,8 +32,8 @@ const PasswordReset = () => {
      }
 
     console.log(email);
-    setShowEmail(false);
-    setShowOtp(true);
+    
+    
   };
 
   const handleSubmitOtp = (e) => {

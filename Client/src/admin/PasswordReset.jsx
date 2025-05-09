@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 
 const PasswordReset = () => {
@@ -10,8 +11,25 @@ const PasswordReset = () => {
   let [newPassword, setNewPassword] = useState("");
   let [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSendOtp = (e) => {
+  //sent opt 
+  const [messagesentOtp, setMessagesentOtp] = useState("")
+  const [errorsentOtp, setErrorsentOtp] = useState("")
+
+  const handleSendOtp = async(e) => {
     e.preventDefault();
+    setMessagesentOtp("")
+    setErrorsentOtp("")
+
+     try {
+       const response = await axios.post("http://localhost:8080/api/v1/users/forgot-password", {email})
+       setMessagesentOtp("Otp has been sent to your email")
+       setShowEmail(false);
+       setShowOtp(true);
+       console.log(response.data);
+       
+     } catch (err) {
+      setErrorsentOtp(err.response.data.message || "Failed to send Otp please try again")
+     }
 
     console.log(email);
     setShowEmail(false);
@@ -67,6 +85,8 @@ const PasswordReset = () => {
                 >
                   Send OTP
                 </button>
+                {messagesentOtp && <p className="text-green-600 mt-4">{messagesentOtp}</p>}
+                {errorsentOtp && <p className="text-red-600 mt-4">{errorsentOtp}</p>}
               </div>
             )}
 

@@ -1,14 +1,16 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import axios from "axios";
-
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const [data, setData] = useState({
-    name: "",
     email: "",
     password: "",
   });
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const [visiblePass, setVisiblePass] = useState(false);
 
   const handleData = (e) => {
     let { name, value } = e.target;
@@ -20,14 +22,30 @@ const Login = () => {
 
   const submitForm = (e) => {
     e.preventDefault();
+    setError("");
 
-    axios.post('http://localhost:8080/login', {data})
-    .then(response => console.log(response)
-    .catch(err => console.log(err)
-    )
-    )
+    axios
+      .post("http://localhost:8080/api/v1/users/login", data)
+      .then((response) => {
+        console.log(response.data.body.accessToken);
+        alert(response.data.message);
+        navigate("/admin-login/admin-dashboard");
+        console.log(response.data);
 
-    console.log(data);
+        // const {accessToken, refreshToken, message} = response.data.body
+
+        localStorage.setItem("accessToken", response.data.body.accessToken);
+       
+      })
+
+      .catch((err) => {
+        if (err) {
+          setError(err.response.data.error);
+          alert(err.response.data.error);
+        } else {
+          setError("An unexpected error occurred. Please try again.");
+        }
+      });
   };
 
   return (
@@ -43,7 +61,7 @@ const Login = () => {
             className="mt-4 space-y-4 lg:mt-5 md:space-y-5"
           >
             {/* Name Field */}
-            <div>
+            {/* <div>
               <label
                 htmlFor="name"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -60,7 +78,7 @@ const Login = () => {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                 required
               />
-            </div>
+            </div> */}
 
             {/* Email Field */}
             <div>
@@ -83,7 +101,7 @@ const Login = () => {
             </div>
 
             {/* Password Field */}
-            <div>
+            <div className="relative">
               <label
                 htmlFor="password"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -91,7 +109,7 @@ const Login = () => {
                 Password
               </label>
               <input
-                type="password"
+                type={visiblePass ? "text" : "password"}
                 id="password"
                 name="password"
                 value={data.password}
@@ -100,17 +118,25 @@ const Login = () => {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                 required
               />
+              <span
+                onClick={() => setVisiblePass(!visiblePass)}
+                className="absolute right-5 bottom-2 self-center transform -translate-y-1/2 cursor-pointer text-gray-500"
+              >
+                {visiblePass ? <FaEyeSlash /> : <FaEye />}
+              </span>
             </div>
 
             {/* Forget Password Link */}
             <div className="text-sm text-right">
               <Link
                 to="/admin-login/forgetpass"
-                className="text-primary-600 hover:underline dark:text-primary-400"
+                className="text-white hover:underline dark:text-primary-400"
               >
                 Forgot Password?
               </Link>
             </div>
+
+            {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
 
             {/* Submit Button */}
             <button

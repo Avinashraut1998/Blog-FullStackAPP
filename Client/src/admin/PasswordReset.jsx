@@ -1,7 +1,11 @@
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 const PasswordReset = () => {
+ 
+  const navigate = useNavigate("")
+
   let [showEmail, setShowEmail] = useState(true);
   let [showOtp, setShowOtp] = useState(false);
   let [showPassword, setShowPassword] = useState(false);
@@ -11,42 +15,77 @@ const PasswordReset = () => {
   let [newPassword, setNewPassword] = useState("");
   let [confirmPassword, setConfirmPassword] = useState("");
 
+  // store Otp
+  let [serverOtp, setServerOtp] = useState("")
+
   //sent opt 
   const [messagesentOtp, setMessagesentOtp] = useState("")
   const [errorsentOtp, setErrorsentOtp] = useState("")
 
-  const handleSendOtp = async(e) => {
+  // reset pass 
+  let [resetMessage, setResetMessage] = useState("");
+  let [resetError, setResetError] = useState("")
+
+  const handleSendOtp = async (e) => {
     e.preventDefault();
     setMessagesentOtp("")
     setErrorsentOtp("")
 
-     try {
-       const response = await axios.post("http://localhost:8080/api/v1/users/forgot-password", {email})
-       setMessagesentOtp("Otp has been sent to your email")
-       setShowEmail(false);
-       setShowOtp(true);
-       console.log(response.data);
-       
-     } catch (err) {
+    try {
+      const response = await axios.post("http://localhost:8080/api/v1/users/forgot-password", { email })
+      setMessagesentOtp("Otp has been sent to your email")
+      setShowEmail(false);
+      setShowOtp(true);
+      setServerOtp(response.data.body.otp);
+
+    } catch (err) {
       setErrorsentOtp(err.response.data.message || "Failed to send Otp please try again")
-     }
+    }
 
     console.log(email);
-    
-    
+
+
   };
 
   const handleSubmitOtp = (e) => {
     e.preventDefault();
 
-    console.log(otp);
+    if (serverOtp == otp) {
+      alert("Otp matched...")
+      setShowOtp(false);
+      setShowPassword(true)
+    } else {
+      alert("Invalid Otp, Please try Again")
+    }
 
-    setShowOtp(false);
-    setShowPassword(true)
+    console.log(serverOtp);
+    
   };
 
-  const handleResetPassword = (e) => {
+  const handleResetPassword = async (e) => {
     e.preventDefault();
+    
+        setResetError("");
+       setResetMessage("");
+
+    if (newPassword !== confirmPassword) {
+      setResetError("Passwords do not match");
+      return;
+    }
+    
+
+    try {
+      const response = await axios.post("http://localhost:8080/api/v1/users/reset-password", { email, otp: otp, newPassword})
+       setResetMessage("Password reset successful!")
+       alert("Password reset successful!")
+       navigate("/admin-login")
+    } catch (error) {
+      setResetError("Failed to reset password")
+      console.log(error);
+      
+    }
+
+    
 
     console.log(newPassword, confirmPassword);
   };
@@ -140,6 +179,7 @@ const PasswordReset = () => {
                   />
                 </div>
                 <div>
+                  
                   <label
                     htmlFor="confirm-password"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -154,7 +194,7 @@ const PasswordReset = () => {
                     placeholder="Enter Confirm Password"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                     required
-                  />
+                  /> 
                 </div>
 
                 <button
@@ -163,6 +203,7 @@ const PasswordReset = () => {
                 >
                   Reset Password
                 </button>
+             
               </>
             )}
           </form>

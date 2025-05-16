@@ -1,9 +1,12 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const PasswordReset = () => {
- 
+
   const navigate = useNavigate("")
 
   let [showEmail, setShowEmail] = useState(true);
@@ -33,12 +36,15 @@ const PasswordReset = () => {
 
     try {
       const response = await axios.post("http://localhost:8080/api/v1/users/forgot-password", { email })
-      setMessagesentOtp("Otp has been sent to your email")
+      // setMessagesentOtp("Otp has been sent to your email")
+    
+      toast.success("OTP has been sent to your email");
       setShowEmail(false);
       setShowOtp(true);
       setServerOtp(response.data.body.otp);
 
     } catch (err) {
+      toast.error(err.response.data.message || "Failed to send OTP please try again")
       setErrorsentOtp(err.response.data.message || "Failed to send Otp please try again")
     }
 
@@ -51,41 +57,47 @@ const PasswordReset = () => {
     e.preventDefault();
 
     if (serverOtp == otp) {
-      alert("Otp matched...")
+      toast.success("OTP matched!");
       setShowOtp(false);
       setShowPassword(true)
     } else {
-      alert("Invalid Otp, Please try Again")
+     
+      toast.error("Invalid OTP, please try again");
     }
 
     console.log(serverOtp);
-    
+
   };
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
-    
-        setResetError("");
-       setResetMessage("");
+
+    setResetError("");
+    setResetMessage("");
 
     if (newPassword !== confirmPassword) {
+      toast.error("Password Do not match")
       setResetError("Passwords do not match");
       return;
-    }
+    } 
+
     
+
 
     try {
-      const response = await axios.post("http://localhost:8080/api/v1/users/reset-password", { email, otp: otp, newPassword})
-       setResetMessage("Password reset successful!")
-       alert("Password reset successful!")
-       navigate("/admin-login")
+      const response = await axios.post("http://localhost:8080/api/v1/users/reset-password", { email, otp: otp, newPassword })
+      toast.success("Password reset successful")
+      setResetMessage("Password reset successful!")
+   
+      navigate("/admin-login")
     } catch (error) {
+      toast.error("Failed to reset password")
       setResetError("Failed to reset password")
       console.log(error);
-      
+
     }
 
-    
+
 
     console.log(newPassword, confirmPassword);
   };
@@ -179,7 +191,7 @@ const PasswordReset = () => {
                   />
                 </div>
                 <div>
-                  
+
                   <label
                     htmlFor="confirm-password"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -194,7 +206,7 @@ const PasswordReset = () => {
                     placeholder="Enter Confirm Password"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                     required
-                  /> 
+                  />
                 </div>
 
                 <button
@@ -203,12 +215,17 @@ const PasswordReset = () => {
                 >
                   Reset Password
                 </button>
-             
+                   
+                
+
+
+
               </>
             )}
           </form>
         </div>
       </div>
+          <ToastContainer  position="top-right" autoClose={3000} hideProgressBar={false} />
     </section>
   );
 };

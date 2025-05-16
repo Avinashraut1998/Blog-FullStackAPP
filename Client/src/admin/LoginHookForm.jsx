@@ -1,11 +1,12 @@
-
-
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const LoginHookForm = () => {
 
@@ -30,9 +31,11 @@ const LoginHookForm = () => {
       .post("http://localhost:8080/api/v1/users/login", data)
       .then((response) => {
         console.log(response.data.body.accessToken);
-        alert(response.data.message);
+       
+        // alert(response.data.message);
         navigate("/admin-login/admin-dashboard");
         console.log(response.data);
+         toast.success(response.data.message)
 
         // const {accessToken, refreshToken, message} = response.data.body
 
@@ -43,7 +46,8 @@ const LoginHookForm = () => {
       .catch((err) => {
         if (err) {
           setError(err.response.data.error);
-          alert(err.response.data.error);
+          toast.error(err.response.data.error)
+          // alert(err.response.data.error);
         } else {
           setError("An unexpected error occurred. Please try again.");
         }
@@ -129,6 +133,8 @@ const LoginHookForm = () => {
           </form>
         </div>
       </div>
+
+      <ToastContainer  position="top-right" autoClose={3000} hideProgressBar={false} />
     </section>
     </>
   )

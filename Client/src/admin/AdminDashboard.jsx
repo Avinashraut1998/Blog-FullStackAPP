@@ -1,3 +1,4 @@
+import CreateUser from "./Admin-User/CreateUser";
 import AdminDashNav from "./AdminDashNav";
 import AdminDashSidebar from "./AdminDashSidebar";
 
@@ -22,6 +23,9 @@ const AdminDashboard = () => {
         <main className="flex-1  p-6 overflow-auto">
           <h2 className="text-2xl font-semibold mb-4">Welcome to Admin Dashboard</h2>
           {/* You can render routes or content components here */}
+            <div>
+              <CreateUser/>
+            </div>
         </main>
       </div>
     </div>

@@ -12,16 +12,16 @@ const AdminDashSidebar = () => {
         <div className="nav space-y-4">
           <div className="nav-option flex items-center gap-3 hover:text-green-500">
             <i className="fa-solid fa-house"></i>
-            <a href="#" className="text-sm font-medium">Home</a>
+            <a href="#" className="text-sm font-medium">Menus</a>
           </div>
           <div className="nav-option flex items-center gap-3 hover:text-green-500">
             <i className="fa-solid fa-magnifying-glass"></i>
-            <a href="#" className="text-sm font-medium">Search</a>
+            <a href="#" className="text-sm font-medium">User Management</a>
           </div>
         </div>
 
         {/* Library */}
-        <div className="library mt-6">
+        {/* <div className="library mt-6">
           <div className="option flex items-center justify-between mb-4">
             <div className="lib-option nav-option flex items-center gap-3">
               <img src="/assets/library_icon.png" alt="Library Icon" className="w-5 h-5" />
@@ -49,7 +49,7 @@ const AdminDashSidebar = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
 

@@ -68,11 +68,9 @@ const userSchema = mongoose.Schema(
         refreshToken : {
             type : String
         },
-        resetOtp : {
-            type : String
-        },
-        resetOtpExpiry : {
-            type : Date
+        isRefreshTokenUsed : {
+            type : Boolean,
+            default : false
         }
     },
     { timestamps: true }

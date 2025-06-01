@@ -267,4 +267,42 @@ const resetPassword = async (req,res) => {
 
 }
 
-export { createUser, loginUser, getUserDetails,logoutUser ,refreshAccessToken,forgotPassword,verifyResetOtp,resetPassword};
+const getAllUsers = async (_, res) => {
+    try {
+        const users = await User.find({}).select( 'firstName lastName email role' );
+        return res.status(200).json({ users });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+const updateUser = async (req, res) => {
+     try {
+        const { id } = req.params;
+
+        const user = await User.findOne({ _id: id });
+
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+        const { firstName, lastName, role } = req.body;
+
+        if(!firstName && !lastName && !role) return res.status(400).json({ error: "All fields are required" });
+
+        user.firstName = firstName || user.firstName;
+        user.lastName = lastName || user.lastName;
+        user.role = role || user.role;
+
+        await user.save();
+
+        return res.status(200).json({ message: "User updated successfully" });
+     } catch (error) {
+        return res.status(500).json({ error: error.message });
+     }
+}
+
+
+
+export {
+    createUser, loginUser, getUserDetails, logoutUser, refreshAccessToken,
+    forgotPassword, verifyResetOtp, resetPassword, getAllUsers,updateUser
+};

@@ -5,6 +5,14 @@ import jwt from "jsonwebtoken";
 
 const userSchema = mongoose.Schema(
     {
+        userName : {
+            type: String,
+            required: true,
+            lowercase: true,
+            trim: true,
+            unique: true,
+            match : [/^[a-zA-Z0-9]{3,16}$/ , 'Username should be 3-16 characters and alphanumeric']
+        },
         firstName: {
             type: String,
             required: true,
@@ -61,9 +69,10 @@ const userSchema = mongoose.Schema(
         },
         role: {
             type: String,
-            trim: true,  // admin, user
+            trim: true,  // admin, editor user
             lowercase: true,
             default: "user",
+            enum : ['user', 'admin', 'editor']
         },
         refreshToken : {
             type : String
@@ -71,6 +80,10 @@ const userSchema = mongoose.Schema(
         isRefreshTokenUsed : {
             type : Boolean,
             default : false
+        },
+        isActive : {
+            type : Boolean,
+            default : true
         }
     },
     { timestamps: true }

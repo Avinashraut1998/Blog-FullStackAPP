@@ -67,7 +67,7 @@ const getAllBlogs = async (req, res) => {
         })
         .populate('categories', 'name -_id')
         .populate('author', "firstName lastName -_id")
-        .select('_id title slug coverImage tags status author categories');
+        .select('_id title slug coverImage tags status author categories publishedAt');
 
         return res.status(200).json({ blogs });
     } catch (error) {
@@ -89,14 +89,19 @@ const getUserBlogs = async (req,res) => {
 
     try {
         // console.log(req.user);
-        const blogs = await Blog.find({
-            author: req.user._id, 
+
+        let query = {
+            author: req.user._id,
             isActive: true,
-            status: status
-        })
-        .populate('categories', 'name -_id')
-        .populate('author', "firstName lastName -_id")
-        .select('_id title slug coverImage status tags author categories');
+        };
+
+        if (status !== "all") {
+            query.status = status;
+        }
+        const blogs = await Blog.find(query)
+            .populate('categories', 'name -_id')
+            .populate('author', "firstName lastName -_id")
+            .select('_id title slug coverImage status tags author categories publishedAt');
 
         return res.status(200).json({ blogs });
     } catch (error) {
@@ -115,7 +120,7 @@ const getPublicBlog = async (req, res) => {
         })
         .populate('categories', 'name -_id')
         .populate('author', "firstName lastName -_id")
-        .select('_id title slug content coverImage tags author categories');
+        .select('_id title slug content coverImage tags author categories publishedAt');
 
         return res.status(200).json({
             blog,
@@ -127,4 +132,77 @@ const getPublicBlog = async (req, res) => {
     }
 }
 
-export { createBlog, getAllBlogs , getUserBlogs ,getPublicBlog};
+const updateBlog = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const { title, content, coverImage, status, tags, categories } = req.body;
+
+        if (!title || !content || !categories) {
+            return res.status(400).json({ error: "Please provide all required fields" });
+        }
+
+        if (!["draft", "published", "archived"].includes(status)) {
+            return res.status(400).json({ error: "Invalid status" });
+        }
+
+        for (let i = 0; i < categories.length; i++) {
+            if (mongose.Types.ObjectId.isValid(categories[i]) === false) {
+                return res.status(400).json({ error: "Invalid category ID" });
+            }
+        }
+
+        const existingBlog = await Blog.findOne({
+            title,
+            isActive: true,
+            createdBy: req.user._id,
+            _id: { $ne: id }
+        });
+
+        if (existingBlog) return res.status(400).json({ error: "You already have a blog with this title" });
+
+        const slug = title.toLowerCase().replace(/ /g, "-");
+
+        const blog = await Blog.findOneAndUpdate(
+            { _id: id, createdBy: req.user._id },
+            {
+                title,
+                slug,
+                content,
+                coverImage,
+                status,
+                tags,
+                categories,
+                updatedBy: req.user._id
+            },
+            { new: true });
+
+        if (!blog) return res.status(404).json({ error: "Blog not found" });
+
+        return res.status(200).json({ blog, message: "Blog updated successfully" });
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+
+}
+
+
+const deleteBlog = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const blog = await Blog.findOneAndUpdate(
+            { _id: id, createdBy: req.user._id },
+            { $set: { isActive: false } },
+            { new: true }
+        );
+        if (!blog) return res.status(404).json({ error: "Blog not found" });
+        return res.status(200).json({ message: "Blog deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+
+export { createBlog, getAllBlogs, getUserBlogs, getPublicBlog, updateBlog, deleteBlog };

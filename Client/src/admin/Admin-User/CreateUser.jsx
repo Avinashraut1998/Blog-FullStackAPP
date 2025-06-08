@@ -35,12 +35,12 @@ const CreateUser = () => {
                       <div className="mb-4.5 flex flex-col gap-3 md:flex-row">
                         <div className="w-full xl:w-1/3">
                           <label className="mb-1.5 block text-black ">
-                            First name <span className="text-meta-1">*</span>
+                            User Name <span className="text-meta-1">*</span>
                           </label>
                           <input
                             type="text"
-                            name="firstname"
-                            placeholder="first name"
+                            name="username"
+                            placeholder="User Name"
                             // onChange={(e) => setFirstName(e.target.value)}
                             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                           />
@@ -48,12 +48,12 @@ const CreateUser = () => {
 
                         <div className="w-full xl:w-1/3">
                           <label className="mb-2.5 block text-black ">
-                            Middlename <span className="text-meta-1">*</span>
+                            First Name <span className="text-meta-1">*</span>
                           </label>
                           <input
                             type="text"
-                            name="middlename"
-                            placeholder="middlename"
+                            name="firstname"
+                            placeholder="firstname"
                             // onChange={(e) => setMiddleName(e.target.value)}
                             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                           />
@@ -87,6 +87,19 @@ const CreateUser = () => {
                           />
                         </div>
 
+                         <div className="w-full xl:w-1/3">
+                          <label className="mb-2.5 block text-black ">
+                            Password <span className="text-meta-1">*</span>
+                          </label>
+                          <input
+                            type="password"
+                            name="password"
+                            placeholder="password"
+                            // onChange={(e) => setPassword(e.target.value)}
+                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                          />
+                        </div>
+
                         <div className="w-full xl:w-1/3">
                           <label className="mb-2.5 block text-black ">
                             Phone No <span className="text-meta-1">*</span>
@@ -99,37 +112,22 @@ const CreateUser = () => {
                             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                           />
                         </div>
-                        <div className="w-full xl:w-1/3">
+                       
+                      </div>
+                      {/* Role */}
+                           
+                             <div className="w-full xl:w-1/3">
                           <label className="mb-2.5 block text-black ">
-                            Password <span className="text-meta-1">*</span>
+                            Role <span className="text-meta-1">*</span>
                           </label>
                           <input
-                            type="password"
-                            name="password"
-                            placeholder="password"
-                            // onChange={(e) => setPassword(e.target.value)}
-                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                            type="test"
+                            name="role"
+                            placeholder="Role"
+                            // onChange={(e) => setNumber(e.target.value)}
+                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                           />
                         </div>
-                      </div>
-                      {/* gender dob and lead status */}
-                      <div className="mb-4.5 flex flex-col gap-6 md:flex-row">
-                        <div className="w-full xl:w-1/3">
-                          <label className="mb-2.5 block text-black ">
-                            Data of Birth <span className="text-meta-1">*</span>
-                          </label>
-                          <input
-                            type="date"
-                            name="dob"
-                            placeholder="Date of birth"
-                            // onChange={(e) => setDob(e.target.value)}
-                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                          />
-                        </div>
-
-                        <div className="w-full xl:w-1/3"></div>
-                        <div className="w-full xl:w-1/3"></div>
-                      </div>
 
                       {/* Address */}
                       {/* error message  */}

@@ -1,4 +1,5 @@
 import CreateUser from "./Admin-User/CreateUser";
+import UserTable from "./Admin-User/UserTable";
 import AdminDashNav from "./AdminDashNav";
 import AdminDashSidebar from "./AdminDashSidebar";
 
@@ -25,6 +26,9 @@ const AdminDashboard = () => {
           {/* You can render routes or content components here */}
             <div>
               <CreateUser/>
+            </div>
+            <div>
+              <UserTable/>
             </div>
         </main>
       </div>

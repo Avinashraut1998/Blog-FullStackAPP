@@ -1,8 +1,34 @@
+import axios from "axios";
 import { useState } from "react"
+import { useForm } from "react-hook-form";
 
 const CreateUser = () => {
 
   const [showModal, setShowModal] = useState(false)
+  const [error, setError] = useState("");
+
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm()
+
+  const onSubmit = (data) => {
+    console.log(`Subbmiting the form ${data}`);
+
+    axios.post('http://localhost:8080/api/v1/users/create-user', data)
+      .then((response) => {
+        console.log(response.data.token);
+
+        localStorage.setItem("accessToken", response.data.token)
+      })
+      .catch((err) => {
+         setError(err?.response?.data?.error || "An unexpected error occurred.");
+      })
+
+  }
 
   return (
     <>
@@ -30,7 +56,7 @@ const CreateUser = () => {
                   {/*body*/}
                   <div className="relative p-6 flex-auto overflow-y-auto max-h-80 md:max-h-90">
                     {/* Ensure to set max height and overflow for the content */}
-                    <form className="font-thin text-sm ">
+                    <form onSubmit={handleSubmit(onSubmit)} className="font-thin text-sm ">
                       {/* name  */}
                       <div className="mb-4.5 flex flex-col gap-3 md:flex-row">
                         <div className="w-full xl:w-1/3">
@@ -39,9 +65,9 @@ const CreateUser = () => {
                           </label>
                           <input
                             type="text"
-                            name="username"
+                            // name="username"
+                            {...register("username")}
                             placeholder="User Name"
-                            // onChange={(e) => setFirstName(e.target.value)}
                             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                           />
                         </div>
@@ -52,9 +78,9 @@ const CreateUser = () => {
                           </label>
                           <input
                             type="text"
-                            name="firstname"
+                            // name="firstname"
+                            {...register("firstname")}
                             placeholder="firstname"
-                            // onChange={(e) => setMiddleName(e.target.value)}
                             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                           />
                         </div>
@@ -65,9 +91,9 @@ const CreateUser = () => {
                           </label>
                           <input
                             type="text"
-                            name="lastname"
+                            // name="lastname"
+                            {...register("lastname")}
                             placeholder="last name"
-                            // onChange={(e) => setLastName(e.target.value)}
                             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                           />
                         </div>
@@ -80,22 +106,22 @@ const CreateUser = () => {
                           </label>
                           <input
                             type="email"
-                            name="email"
+                            // name="email"
+                            {...register("email")}
                             placeholder="email"
-                            // onChange={(e) => setEmail(e.target.value)}
                             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                           />
                         </div>
 
-                         <div className="w-full xl:w-1/3">
+                        <div className="w-full xl:w-1/3">
                           <label className="mb-2.5 block text-black ">
                             Password <span className="text-meta-1">*</span>
                           </label>
                           <input
                             type="password"
-                            name="password"
+                            // name="password"
+                            {...register("password")}
                             placeholder="password"
-                            // onChange={(e) => setPassword(e.target.value)}
                             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                           />
                         </div>
@@ -106,32 +132,40 @@ const CreateUser = () => {
                           </label>
                           <input
                             type="number"
-                            name="phone no"
+                            // name="phone no"
+                            {...register("phoneno")}
                             placeholder="phone no"
-                            // onChange={(e) => setNumber(e.target.value)}
-                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                          />
-                        </div>
-                       
-                      </div>
-                      {/* Role */}
-                           
-                             <div className="w-full xl:w-1/3">
-                          <label className="mb-2.5 block text-black ">
-                            Role <span className="text-meta-1">*</span>
-                          </label>
-                          <input
-                            type="test"
-                            name="role"
-                            placeholder="Role"
-                            // onChange={(e) => setNumber(e.target.value)}
                             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                           />
                         </div>
 
+                      </div>
+                      {/* Role */}
+
+                      <div className="w-full xl:w-1/3">
+                        <label className="mb-2.5 block text-black ">
+                          Role <span className="text-meta-1">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          // name="role"
+                          {...register("role")}
+                          placeholder="Role"
+                          className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        />
+                      </div>
+                       <button
+                      className="inline-flex items-center justify-center bg-primary px-1 py-1 text-center font-normal  text-black hover:bg-opacity-90 md:px-2 xl:px-4"
+                      type="submit"
+                    // onClick={handleFormSubmit}
+                    >
+                      Save
+                    </button>
+                      </form>
+
                       {/* Address */}
                       {/* error message  */}
-                    </form>
+
                   </div>
                   {/*footer*/}
                   <div className="flex items-center text-title-sm justify-end gap-2 p-2 border-t border-solid border-blueGray-200 rounded-b">
@@ -150,13 +184,14 @@ const CreateUser = () => {
                       Save
                     </button>
                   </div>
-                </div>
+                
               </div>
             </div>
-            <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-          </>
-          ) : null
-      }
+          </div>
+      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+    </>
+  ) : null
+}
     </>
   )
 

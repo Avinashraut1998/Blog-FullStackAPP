@@ -1,17 +1,21 @@
 
 import express from "express";
-import {createUser, forgetPassword, getUserDetails, loginUser, logoutUser, refreshAccessToken, resetPassword} from "../controllers/user.controller.js";
+import {
+    createUser,  getUserDetails, getAllUsers,
+    updateUser,
+    deleteUser
+} from "../controllers/user.controller.js";
 import { verifyToken } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
+
+// users routes
 router.route("/create-user").post(createUser);
-router.route("/login").post(loginUser);
-router.route("/logout").post(verifyToken,logoutUser);
+router.route("/get-users").get(verifyToken,getAllUsers);
+router.route("/update-user/:id").post(verifyToken,updateUser);
+router.route("/delete-user/:id").delete(verifyToken,deleteUser);
 router.route("/get-user-details").get(verifyToken ,getUserDetails);
-router.route("/refresh-token").post(refreshAccessToken);
-router.route("/forgot-password").post(forgetPassword);
-router.route("/reset-password").post(resetPassword);
 
 
 

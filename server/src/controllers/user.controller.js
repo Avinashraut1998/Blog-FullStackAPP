@@ -1,29 +1,39 @@
-import jwt from "jsonwebtoken";
+
 import { User } from "../models/user.model.js";
+
 
 const createUser = async (req, res) => {
 
     const {
+        userName,
         firstName,
         lastName,
         email,
         password,
+        phoneNumber,
+        role
     } = req.body;
     try {
-        if (!firstName || !lastName || !email || !password) {
+        if ( !userName || !firstName || !lastName || !email || !password || !phoneNumber || !role) {
             return res.status(400).json({ error: "All fields are required" });
         };
 
         const userExists = await User.findOne({ email });
+
+        if(userExists && userExists.userName === userName) return res.status(400).json({ error: "Username already exists" });
+
         if (userExists) {
             return res.status(400).json({ error: "User already exists" });
         };
 
         const user = await User.create({
+            userName,
             firstName,
             lastName,
             email,
-            password
+            password,
+            phoneNumber,
+            role
         });
 
         user.password = '';
@@ -34,159 +44,64 @@ const createUser = async (req, res) => {
     }
 }
 
-const loginUser = async (req, res) => {
-    const { email, password } = req.body;
-
-    try {
-
-        if (!email || !password) {
-            return res.status(400).json({ error: "All fields are required" });
-        };
-
-        const user = await User.findOne({ email });
-
-        if (!user) res.status(404).json({ error: "User in not registered" })
-
-        const isPasswordCorrect = await user.checkPassword(password);
-
-        if (!isPasswordCorrect) res.status(401).json({ error: "Invalid credentials" });
-
-        let accessToken = await user.createAccessToken();
-        let refreshToken = await user.createRefreshToken();
-
-        user.refreshToken = refreshToken;
-        await user.save({ validateBeforeSave: false })
-
-        const options = {
-            httpOnly: true,
-            secure: true,
-            // maxAge: 24 * 60 * 60 * 1000
-        }
-        user.password = '';
-        user.refreshToken = '';
-        res.status(200)
-        .cookie('refreshToken', refreshToken, options)
-        .json({
-            body: {
-                user,
-                accessToken
-            },
-            message: "User logged in successfully"
-        })
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-}
-
 const getUserDetails = async (req, res) => {
     return res.status(200).json({ user: req.user, message: "User details fetched successfully" });
 }
 
-const logoutUser = async (req, res) => {
-    const userId = req.user._id;
+const getAllUsers = async (_, res) => {
     try {
-        const options = { httpOnly: true, secure: true }
-        await User.findOneAndUpdate({ _id: userId }, { $set: { refreshToken: null } });
-        return res.status(200)
-            .clearCookie('refreshToken', options)
-            .json({ message: "User logged out successfully" });
+        const users = await User.find({ isActive: true }).select( 'firstName lastName email role isActive' );
+        return res.status(200).json({ users });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 }
 
-const refreshAccessToken = async (req, res) => {
-    const incomingRefreshToken  = req.cookies.refreshToken;
+const updateUser = async (req, res) => {
+     try {
+        const { id } = req.params;
 
-    if(!incomingRefreshToken) return res.status(401).json({ error: "Unauthorized Request" });
+        const user = await User.findOne({ _id: id });
+
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+        const { firstName, lastName, email, phoneNumber, role  } = req.body;
+
+        if(  !firstName || !lastName || !role || !phoneNumber || !email) return res.status(400).json({ error: "All fields are required" });
+
+        user.firstName = firstName;
+        user.lastName = lastName;
+        user.email = email;
+        user.phoneNumber = phoneNumber;
+        user.role = role;
+
+        await user.save();
+
+        return res.status(200).json({ message: "User updated successfully" });
+     } catch (error) {
+        return res.status(500).json({ error: error.message });
+     }
+}
+
+const deleteUser = async (req, res) => {
     try {
+        const { id } = req.params;
 
-        const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
-        const user = await User.findOne({ _id: decodedToken._id });
+        const user = await User.findOne({ _id: id });
 
-        if (!user || user.refreshToken !== incomingRefreshToken) {
-            return res.status(401).json({ error: "Invalid or expired refresh token" });
-          }
+        if (!user) return res.status(404).json({ error: "User not found" }); 1
 
-          
-        if( user.refreshToken !== incomingRefreshToken) return res.status(401).json({ error: "Refresh token is expired or used" });
-    
-        const newRefreshToken = await user.createRefreshToken();
-        const newAccessToken = await user.createAccessToken();
+        const loggedUser =  await User.findOneAndUpdate({ _id: id }, { $set: { isActive: false } });
+        console.log(loggedUser);
 
-        user.refreshToken = newRefreshToken;
-        await user.save({ validateBeforeSave: false });
-
-        const options = {
-            httpOnly: true,
-            secure: true,
-            // maxAge: 24 * 60 * 60 * 1000
-        }
-        res.cookie('refreshToken', newRefreshToken, options);
-        res.status(200).json(
-            { body: { 'accessToken': newAccessToken },
-             message: 'Access token created successfully'
-            });
-
+        return res.status(200).json({ message: "User deleted successfully" });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 }
 
-const forgetPassword = async ( req, res ) => {
- const { email } = req.body;
 
- if(!email) return res.status(400).json({ error: "Email is required" });
 
-  try {
-    const existingUser = await User.findOne({ email });
-
-    if(!existingUser) return res.status(404).json({ error: "User not found" });
-
-    const otp = await existingUser.createResetPasswordToken();
-    
-    await existingUser.save({ validateBeforeSave: false });
-
-    res.status(200)
-    .json({body: {
-        otp : otp
-    }, message: "OTP sent successfully"});
-
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-const resetPassword = async (req, res) => {
-    const { email, otp, newPassword } = req.body;
-
-    if (!email || !otp || !newPassword) return res.status(400).json({ error: "All fields are required" });
-
-    try {
-        const existingUser = await User.findOne({ email });
-
-        if (!existingUser) return res.status(404).json({ error: "User not found" });
-
-        console.log(existingUser, otp)
-        const isOptValid = existingUser.resetOtp !== otp;
-
-        if (isOptValid) return res.status(400).json({ error: "Invalid OTP" });
-
-        const isOptExpired = existingUser.resetOtpExpiry < Date.now();
-
-        if (isOptExpired) return res.status(400).json({ error: "OTP is expired" });
-
-        existingUser.password = newPassword;
-        existingUser.resetOtp = null;
-        existingUser.resetOtpExpiry = null;
-
-        await existingUser.save({ validateBeforeSave: false });
-
-        res.status(200).json({ message: "Password reset successfully" });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-
-}
-
-export { createUser, loginUser, getUserDetails,logoutUser ,refreshAccessToken,forgetPassword,resetPassword};
+export {
+    createUser,  getUserDetails, getAllUsers,updateUser,deleteUser
+};

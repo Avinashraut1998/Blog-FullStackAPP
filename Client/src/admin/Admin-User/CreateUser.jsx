@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useState } from "react"
 import { useForm } from "react-hook-form";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreateUser = () => {
 
@@ -12,21 +14,50 @@ const CreateUser = () => {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm()
 
   const onSubmit = (data) => {
-    console.log(`Subbmiting the form ${data}`);
+    console.log(`Subbmiting the form`, data);
 
-    axios.post('http://localhost:8080/api/v1/users/create-user', data)
+    const token = localStorage.getItem("accessToken")
+
+    const config = { headers : {
+      'Authorization': 'Bearer ' + token
+    }}
+
+    axios.post('http://localhost:8080/api/v1/users/create-user', data, config )
       .then((response) => {
-        console.log(response.data.token);
+        // console.log(response.data.token);
+        toast.success(response.data.message)
+        
 
-        localStorage.setItem("accessToken", response.data.token)
+        // localStorage.setItem("accessToken", response.data.token)
+        // console.log("Token stored in localStorage:", response.data.token);
+
+        console.log("Full response:", response);
+
+        // Safely access the token
+        // const token = response.data?.token;
+        // console.log("Token:", token);
+
+        // if (token) {
+        //   localStorage.setItem("accessToken", token);
+        //   console.log("Token stored in localStorage:", token);
+        // } else {
+        //   console.warn("Token not found in response");
+        // }
+        
+        reset();
+
+
       })
-      .catch((err) => {
-         setError(err?.response?.data?.error || "An unexpected error occurred.");
-      })
+     .catch((err) => {
+      console.log("Full error response:", err?.response?.data);
+      setError(err?.response?.data?.error || "An unexpected error occurred.");
+      toast.error(err?.response?.data?.error || "An error occurred.");
+    });
 
   }
 
@@ -66,7 +97,7 @@ const CreateUser = () => {
                           <input
                             type="text"
                             // name="username"
-                            {...register("username")}
+                            {...register("userName")}
                             placeholder="User Name"
                             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                           />
@@ -79,7 +110,7 @@ const CreateUser = () => {
                           <input
                             type="text"
                             // name="firstname"
-                            {...register("firstname")}
+                            {...register("firstName")}
                             placeholder="firstname"
                             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                           />
@@ -92,7 +123,7 @@ const CreateUser = () => {
                           <input
                             type="text"
                             // name="lastname"
-                            {...register("lastname")}
+                            {...register("lastName")}
                             placeholder="last name"
                             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                           />
@@ -133,7 +164,7 @@ const CreateUser = () => {
                           <input
                             type="number"
                             // name="phone no"
-                            {...register("phoneno")}
+                            {...register("phoneNumber")}
                             placeholder="phone no"
                             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                           />
@@ -146,25 +177,35 @@ const CreateUser = () => {
                         <label className="mb-2.5 block text-black ">
                           Role <span className="text-meta-1">*</span>
                         </label>
-                        <input
+                        <select
+                          {...register("role")}
+                          className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary"
+                        >
+                          <option value="">Select Role</option>
+                          <option value="admin">Admin</option>
+                          <option value="editor">Editor</option>
+                          <option value="user">User</option>
+                        </select>
+                        {/* <input
                           type="text"
                           // name="role"
                           {...register("role")}
                           placeholder="Role"
                           className="w-full rounded border-[1.5px] border-stroke bg-transparent py-0.5 px-1.5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        />
+                        /> */}
                       </div>
-                       <button
-                      className="inline-flex items-center justify-center bg-primary px-1 py-1 text-center font-normal  text-black hover:bg-opacity-90 md:px-2 xl:px-4"
-                      type="submit"
-                    // onClick={handleFormSubmit}
-                    >
-                      Save
-                    </button>
-                      </form>
+                      {error ? <p className="text-red-500 text-sm mb-3">{error}</p> : null}
+                      <button
+                        className="inline-flex items-center justify-center bg-primary px-1 py-1 text-center font-normal  text-black hover:bg-opacity-90 md:px-2 xl:px-4"
+                        type="submit"
+                      // onClick={handleFormSubmit}
+                      >
+                        Save
+                      </button>
+                    </form>
 
-                      {/* Address */}
-                      {/* error message  */}
+                    {/* Address */}
+                    {/* error message  */}
 
                   </div>
                   {/*footer*/}
@@ -184,14 +225,15 @@ const CreateUser = () => {
                       Save
                     </button>
                   </div>
-                
+
+                </div>
               </div>
             </div>
-          </div>
-      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-    </>
-  ) : null
-}
+            <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+          </>
+          ) : null
+      }
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
     </>
   )
 

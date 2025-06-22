@@ -28,7 +28,7 @@ const LoginHookForm = () => {
 
      
         axios
-      .post("http://localhost:8080/api/v1/users/login", data)
+      .post("http://localhost:8080/api/v1/auth/login", data)
       .then((response) => {
         console.log(response.data.body.accessToken);
        

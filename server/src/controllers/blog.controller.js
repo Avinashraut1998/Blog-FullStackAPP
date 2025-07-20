@@ -4,9 +4,9 @@ import mongose from "mongoose";
 
 const createBlog = async (req, res) => {
     try {
-        const { title, content, coverImage, status, tags, categories } = req.body;
+        const { title, content,  status,  } = req.body;
 
-        if (!title || !content || !coverImage || !status || !tags || !categories) {
+        if (!title || !content ||  !status) {
             return res.status(400).json({ error: "All fields are required" });
         }
 
@@ -14,17 +14,19 @@ const createBlog = async (req, res) => {
             return res.status(400).json({ error: "Invalid status" });
         }
 
-        if (!Array.isArray(tags) || !Array.isArray(categories)) {
-            return res.status(400).json({ error: "Tags and categories must be arrays" });
-        }
+        if (categories && Array.isArray(categories)) {
+            if (!Array.isArray(tags) || !Array.isArray(categories)) {
+                return res.status(400).json({ error: "Tags and categories must be arrays" });
+            }
 
-        if(categories.length === 0) {
-            return res.status(400).json({ error: "Blog must have at least one category" });
-        }
+            if (categories.length === 0) {
+                return res.status(400).json({ error: "Blog must have at least one category" });
+            }
 
-        for(let i = 0; i < categories.length; i++) {
-            if ( mongose.Types.ObjectId.isValid(categories[i]) === false) {
-                return res.status(400).json({ error: "Invalid category ID" });
+            for (let i = 0; i < categories.length; i++) {
+                if (mongose.Types.ObjectId.isValid(categories[i]) === false) {
+                    return res.status(400).json({ error: "Invalid category ID" });
+                }
             }
         }
 
@@ -136,7 +138,7 @@ const updateBlog = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const { title, content, coverImage, status, tags, categories } = req.body;
+        const { title, content,  status } = req.body;
 
         if (!title || !content || !categories) {
             return res.status(400).json({ error: "Please provide all required fields" });
@@ -146,11 +148,6 @@ const updateBlog = async (req, res) => {
             return res.status(400).json({ error: "Invalid status" });
         }
 
-        for (let i = 0; i < categories.length; i++) {
-            if (mongose.Types.ObjectId.isValid(categories[i]) === false) {
-                return res.status(400).json({ error: "Invalid category ID" });
-            }
-        }
 
         const existingBlog = await Blog.findOne({
             title,

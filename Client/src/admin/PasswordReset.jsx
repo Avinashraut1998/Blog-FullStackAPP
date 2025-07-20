@@ -35,33 +35,31 @@ const PasswordReset = () => {
     setErrorsentOtp("")
 
     try {
-      const response = await axios.post("http://localhost:8080/api/v1/users/forgot-password", { email })
+      const response = await axios.post("http://localhost:8080/api/v1/auth/forgot-password", { email })
       // setMessagesentOtp("Otp has been sent to your email")
-    
+
       toast.success("OTP has been sent to your email");
       setShowEmail(false);
       setShowOtp(true);
-      setServerOtp(response.data.body.otp);
+      setServerOtp(response.data.otp);
 
     } catch (err) {
       toast.error(err.response.data.message || "Failed to send OTP please try again")
       setErrorsentOtp(err.response.data.message || "Failed to send Otp please try again")
     }
 
-    console.log(email);
-
-
   };
 
   const handleSubmitOtp = (e) => {
     e.preventDefault();
 
+    console.log(serverOtp, otp);
     if (serverOtp == otp) {
       toast.success("OTP matched!");
       setShowOtp(false);
       setShowPassword(true)
     } else {
-     
+
       toast.error("Invalid OTP, please try again");
     }
 
@@ -79,16 +77,14 @@ const PasswordReset = () => {
       toast.error("Password Do not match")
       setResetError("Passwords do not match");
       return;
-    } 
-
-    
+    }
 
 
     try {
-      const response = await axios.post("http://localhost:8080/api/v1/users/reset-password", { email, otp: otp, newPassword })
+      const response = await axios.post("http://localhost:8080/api/v1/auth/reset-password", { email, otp: otp, newPassword })
       toast.success("Password reset successful")
       setResetMessage("Password reset successful!")
-   
+
       navigate("/admin-login")
     } catch (error) {
       toast.error("Failed to reset password")
@@ -96,9 +92,6 @@ const PasswordReset = () => {
       console.log(error);
 
     }
-
-
-
     console.log(newPassword, confirmPassword);
   };
 
@@ -215,17 +208,13 @@ const PasswordReset = () => {
                 >
                   Reset Password
                 </button>
-                   
-                
-
-
 
               </>
             )}
           </form>
         </div>
       </div>
-          <ToastContainer  position="top-right" autoClose={3000} hideProgressBar={false} />
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
     </section>
   );
 };

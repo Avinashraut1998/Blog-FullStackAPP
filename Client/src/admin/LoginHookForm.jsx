@@ -14,12 +14,9 @@ const LoginHookForm = () => {
     const [visiblePass, setVisiblePass] = useState(true)
     const navigate = useNavigate();
 
-
-
     const {
         register,
         handleSubmit,
-        watch,
         formState: { errors },
       } = useForm()
 
@@ -30,16 +27,9 @@ const LoginHookForm = () => {
         axios
       .post("http://localhost:8080/api/v1/auth/login", data)
       .then((response) => {
-        console.log(response.data.body.accessToken);
-       
-        // alert(response.data.message);
-        navigate("/admin-login/admin-dashboard");
-        console.log(response.data);
-         toast.success(response.data.message)
-
-        // const {accessToken, refreshToken, message} = response.data.body
-
+        toast.success(response.data.message)
         localStorage.setItem("accessToken", response.data.body.accessToken);
+          navigate("/admin");
        
       })
 
@@ -133,8 +123,6 @@ const LoginHookForm = () => {
           </form>
         </div>
       </div>
-
-      <ToastContainer  position="top-right" autoClose={3000} hideProgressBar={false} />
     </section>
     </>
   )

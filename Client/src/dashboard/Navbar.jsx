@@ -1,21 +1,29 @@
 import axios from "axios";
 import { FaPowerOff } from "react-icons/fa"
 import { useNavigate } from "react-router";
+import { toast, ToastContainer } from "react-toastify";
 
 
 const Navbar = () => {
 const navigate = useNavigate()
 
   const handleLogout = async () => {
+    const token = localStorage.getItem("accessToken");
     const response = await axios
-      .post("http://localhost:8080/api/v1/auth/logout")
+      .post("http://localhost:8080/api/v1/auth/logout", {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      })
       .catch((err) => console.log(err));
-    if (response && response.data) {
-      localStorage.removeItem("accessToken");
-      navigate("/admin-login");
-    }
+      if (response) {
+        toast.success("Logout successful");
+        localStorage.removeItem("accessToken");
+          navigate("/admin-login");
+      }
   }
   return (
+   <>
     <nav className='h-14 border-b border-gray-600 p-4 w-full'>
       <div className="flex justify-end">
         <button type="button" 
@@ -26,6 +34,7 @@ const navigate = useNavigate()
         </button>
       </div>
     </nav>
+   </>
   )
 }
 

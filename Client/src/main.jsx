@@ -22,6 +22,7 @@ import LoginHookForm from "./admin/LoginHookForm.jsx";
 import AdminLayout from "./dashboard/AdminLayout.jsx";
 import BlogManagement from "./dashboard/BlogManagement.jsx";
 import UserManagement from "./dashboard/UserManagement.jsx";
+import { ToastContainer } from "react-toastify";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -62,6 +63,7 @@ const router = createBrowserRouter(
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <RouterProvider router={router} />
+        <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
     {/* <App /> */}
   </StrictMode>
 );

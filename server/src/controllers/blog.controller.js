@@ -14,21 +14,21 @@ const createBlog = async (req, res) => {
             return res.status(400).json({ error: "Invalid status" });
         }
 
-        if (categories && Array.isArray(categories)) {
-            if (!Array.isArray(tags) || !Array.isArray(categories)) {
-                return res.status(400).json({ error: "Tags and categories must be arrays" });
-            }
+        // if (categories && Array.isArray(categories)) {
+        //     if (!Array.isArray(tags) || !Array.isArray(categories)) {
+        //         return res.status(400).json({ error: "Tags and categories must be arrays" });
+        //     }
 
-            if (categories.length === 0) {
-                return res.status(400).json({ error: "Blog must have at least one category" });
-            }
+        //     if (categories.length === 0) {
+        //         return res.status(400).json({ error: "Blog must have at least one category" });
+        //     }
 
-            for (let i = 0; i < categories.length; i++) {
-                if (mongose.Types.ObjectId.isValid(categories[i]) === false) {
-                    return res.status(400).json({ error: "Invalid category ID" });
-                }
-            }
-        }
+        //     for (let i = 0; i < categories.length; i++) {
+        //         if (mongose.Types.ObjectId.isValid(categories[i]) === false) {
+        //             return res.status(400).json({ error: "Invalid category ID" });
+        //         }
+        //     }
+        // }
 
         const blogExists = await Blog.findOne({
             title,
@@ -43,10 +43,10 @@ const createBlog = async (req, res) => {
             title,
             slug,
             content,
-            coverImage,
+            // coverImage,
             status,
-            tags, 
-            categories,
+            // tags, 
+            // categories,
             publishedAt: new Date(),
             author : req.user._id,
             createdBy: req.user._id,
@@ -54,7 +54,7 @@ const createBlog = async (req, res) => {
 
         });
 
-        return res.status(200).json({ blog, message: "Blog created successfully" });
+        return res.status(200).json({ body: blog, message: "Blog created successfully", status: 200 });
 
     } catch (error) {
         return res.status(500).json({ error: error.message });
@@ -85,7 +85,7 @@ const getUserBlogs = async (req,res) => {
         return res.status(400).json({ error: "Status is required" });
     }
 
-    if(!["draft", "published", "archived"].includes(status)) {
+    if(!["draft", "published", "archived",'all'].includes(status)) {
         return res.status(400).json({ error: "Invalid status" });
     }
 

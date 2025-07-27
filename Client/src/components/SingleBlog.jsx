@@ -17,7 +17,7 @@ const SingleBlog = () => {
         setError(null);
         
         const response = await axios.get(
-          `http://localhost:8080/api/v1/blogs/blog/${id}`
+          `https://blog-fullstackapp.onrender.com/api/v1/blogs/blog/${id}`
         );
         
         setBlog(response.data.blog); 

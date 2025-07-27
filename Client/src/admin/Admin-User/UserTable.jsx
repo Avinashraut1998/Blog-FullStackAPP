@@ -24,7 +24,7 @@ const UserTable = () => {
     try {
       const token = localStorage.getItem("accessToken");
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const response = await axios.get("http://localhost:8080/api/v1/users/get-users", config);
+      const response = await axios.get("https://blog-fullstackapp.onrender.com/api/v1/users/get-users", config);
       setUsers(response.data.users);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -38,7 +38,7 @@ const UserTable = () => {
 
     const token = localStorage.getItem("accessToken");
     try {
-      await axios.delete(`http://localhost:8080/api/v1/users/delete-user/${id}`, {
+      await axios.delete(`https://blog-fullstackapp.onrender.com/api/v1/users/delete-user/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(users.filter((item) => item._id !== id));
@@ -65,7 +65,7 @@ const UserTable = () => {
     setFormError("");
     const token = localStorage.getItem("accessToken");
     try {
-      await axios.post(`http://localhost:8080/api/v1/users/update-user/${editUser._id}`, editForm, {
+      await axios.post(`https://blog-fullstackapp.onrender.com/api/v1/users/update-user/${editUser._id}`, editForm, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setEditUser(null);

@@ -35,7 +35,7 @@ const PasswordReset = () => {
     setErrorsentOtp("")
 
     try {
-      const response = await axios.post("http://localhost:8080/api/v1/auth/forgot-password", { email })
+      const response = await axios.post("https://blog-fullstackapp.onrender.com/api/v1/auth/forgot-password", { email })
       // setMessagesentOtp("Otp has been sent to your email")
 
       toast.success("OTP has been sent to your email");
@@ -81,7 +81,7 @@ const PasswordReset = () => {
 
 
     try {
-      const response = await axios.post("http://localhost:8080/api/v1/auth/reset-password", { email, otp: otp, newPassword })
+      const response = await axios.post("https://blog-fullstackapp.onrender.com/api/v1/auth/reset-password", { email, otp: otp, newPassword })
       toast.success("Password reset successful")
       setResetMessage("Password reset successful!")
 

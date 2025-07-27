@@ -10,7 +10,7 @@ const navigate = useNavigate()
   const handleLogout = async () => {
     const token = localStorage.getItem("accessToken");
     const response = await axios
-      .post("http://localhost:8080/api/v1/auth/logout", {}, {
+      .post("https://blog-fullstackapp.onrender.com/api/v1/auth/logout", {}, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

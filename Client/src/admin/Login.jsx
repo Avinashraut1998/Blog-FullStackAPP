@@ -25,7 +25,7 @@ const Login = () => {
     setError("");
 
     axios
-      .post("http://localhost:8080/api/v1/users/login", data)
+      .post("https://blog-fullstackapp.onrender.com/api/v1/users/login", data)
       .then((response) => {
         console.log(response.data.body.accessToken);
         alert(response.data.message);

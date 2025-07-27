@@ -12,7 +12,7 @@ const BlogManagement = () => {
     const fetchBlogs = async () => {
       try {
         const response = await axios.post(
-          `http://localhost:8080/api/v1/blogs/get-user-blogs`,
+          `https://blog-fullstackapp.onrender.com/api/v1/blogs/get-user-blogs`,
           { status: 'all' },
           {
             headers: {

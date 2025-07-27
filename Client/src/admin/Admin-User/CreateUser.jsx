@@ -27,7 +27,7 @@ const CreateUser = () => {
       'Authorization': 'Bearer ' + token
     }}
 
-    axios.post('http://localhost:8080/api/v1/users/create-user', data, config )
+    axios.post('https://blog-fullstackapp.onrender.com/api/v1/users/create-user', data, config )
       .then((response) => {
         // console.log(response.data.token);
         toast.success(response.data.message)

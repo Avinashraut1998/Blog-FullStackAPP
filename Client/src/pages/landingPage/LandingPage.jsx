@@ -12,7 +12,7 @@ const [blogList, setBlogList] = useState([]);
     const fetchBlogs = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/v1/blogs/get-all-blogs`,
+          `https://blog-fullstackapp.onrender.com/api/v1/blogs/get-all-blogs`,
         );
         setBlogList(response.data.blogs);
       } catch (error) {

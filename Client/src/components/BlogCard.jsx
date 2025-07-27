@@ -14,12 +14,12 @@ const BlogCard = ({ blog, onClick }) => {
   };
 
   const handleCardClick = () => {
-    navigate(`/blog/${blog._id}`); // Navigate to single blog page
+    navigate(`/blog/${blog._id}`);
   };
 
   return (
     <div 
-      className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 cursor-pointer border border-pink-100 hover:border-pink-200 transform hover:-translate-y-1"
+      className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 border border-pink-100 hover:border-pink-200 transform hover:-translate-y-1"
       onClick={() => onClick(blog)}
     >
       <div className="flex items-start justify-between mb-4">
@@ -28,7 +28,7 @@ const BlogCard = ({ blog, onClick }) => {
         </span> */}
       </div>
       
-      <h3 className="text-xl font-bold text-gray-800 mb-3 line-clamp-2 hover:text-pink-600 transition-colors">
+      <h3 className="text-xl font-bold text-gray-800 mb-3">
         {blog.title}
       </h3>
       

@@ -43,7 +43,7 @@ const router = createBrowserRouter(
       <Route path="/admin-login/forgetpass" element={<PasswordReset />} />
       <Route path="/admin-login/admin-dashboard" element={<ProtectedRoute> <AdminDashboard /> </ProtectedRoute>} />
 
-      {/* Admin Dashboard */}
+      {/*New Admin Dashboard */}
       <Route
         path="/admin"
         element={
@@ -54,7 +54,7 @@ const router = createBrowserRouter(
       >
         <Route path="home" element={<div>Home</div>} />
         <Route path="users" element={<UserManagement />} />
-        <Route path="blogs-management" element={<BlogManagement/>} />
+        <Route path="blogs-management" element={<BlogManagement />} />
         <Route path="settings" element={<div>Settings</div>} />
       </Route>
 
@@ -65,7 +65,7 @@ const router = createBrowserRouter(
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <RouterProvider router={router} />
-        <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
+    <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
     {/* <App /> */}
   </StrictMode>
 );

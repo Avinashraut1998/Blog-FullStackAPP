@@ -46,10 +46,9 @@ const SingleBlog = () => {
   };
 
   const handleBack = () => {
-    navigate('/'); // Navigate back to home/landing page
+    navigate('/'); 
   };
 
-  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-pink-50 to-rose-100 py-8 px-4">
@@ -65,7 +64,6 @@ const SingleBlog = () => {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-pink-50 to-rose-100 py-8 px-4">
@@ -94,7 +92,6 @@ const SingleBlog = () => {
     );
   }
 
-  // If no blog found
   if (!blog) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-pink-50 to-rose-100 py-8 px-4">
@@ -123,11 +120,9 @@ const SingleBlog = () => {
     );
   }
 
-  // Main blog display
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 to-rose-100 py-8 px-4">
       <div className="max-w-4xl mx-auto">
-        {/* Back Button */}
         <button 
           onClick={handleBack}
           className="flex items-center space-x-2 text-pink-600 hover:text-pink-700 mb-8 transition-colors group"
@@ -136,21 +131,13 @@ const SingleBlog = () => {
           <span className="font-medium">Back to blogs</span>
         </button>
         
-        {/* Blog Content */}
+
         <article className="bg-white rounded-2xl shadow-lg p-8 md:p-12 border border-pink-100">
-          {/* Status Badge */}
-          {/* <div className="mb-6">
-            <span className="inline-block bg-pink-100 text-pink-800 text-sm font-medium px-4 py-2 rounded-full">
-              {blog.status}
-            </span>
-          </div> */}
-          
-          {/* Title */}
+
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6 leading-tight">
             {blog.title}
           </h1>
-          
-          {/* Meta Information */}
+      
           <div className="flex flex-wrap items-center gap-6 mb-8 pb-8 border-b border-pink-100">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-pink-200 rounded-full flex items-center justify-center">
@@ -170,7 +157,6 @@ const SingleBlog = () => {
             </div>
           </div>
           
-          {/* Blog Content */}
           <div className="prose prose-pink max-w-none">
             <div 
               className="text-gray-700 leading-relaxed text-lg"
@@ -178,20 +164,6 @@ const SingleBlog = () => {
             />
           </div>
           
-          {/* Footer */}
-          <div className="mt-12 pt-8 border-t border-pink-100">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-500">
-                Slug: <span className="font-mono bg-pink-50 px-2 py-1 rounded">{blog.slug}</span>
-              </div>
-              <button 
-                onClick={handleBack}
-                className="bg-pink-600 hover:bg-pink-700 text-white font-medium px-6 py-3 rounded-lg transition-colors"
-              >
-                Back to all blogs
-              </button>
-            </div>
-          </div>
         </article>
       </div>
     </div>

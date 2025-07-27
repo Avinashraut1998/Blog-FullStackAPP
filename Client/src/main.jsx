@@ -23,6 +23,7 @@ import AdminLayout from "./dashboard/AdminLayout.jsx";
 import BlogManagement from "./dashboard/BlogManagement.jsx";
 import UserManagement from "./dashboard/UserManagement.jsx";
 import { ToastContainer } from "react-toastify";
+import SingleBlog from "./components/SingleBlog.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -31,6 +32,7 @@ const router = createBrowserRouter(
         {/* LandingPage-Routes */}
 
         <Route index element={<LandingPage />} />
+        <Route path="/blog/:id" element={<SingleBlog />} />
         <Route path="/about" element={<About />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/article" element={<Articles />} />

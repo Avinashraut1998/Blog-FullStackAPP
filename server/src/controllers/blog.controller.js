@@ -67,15 +67,16 @@ const getAllBlogs = async (req, res) => {
             isActive: true,
             status: "published"
         })
-        .populate('categories', 'name -_id')
+        // .populate('categories', 'name -_id')
         .populate('author', "firstName lastName -_id")
-        .select('_id title slug coverImage tags status author categories publishedAt');
+        .select('_id title slug status author content publishedAt');
 
         return res.status(200).json({ blogs });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 }
+
 
 const getUserBlogs = async (req,res) => {
 

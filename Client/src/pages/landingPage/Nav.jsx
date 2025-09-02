@@ -27,10 +27,10 @@ const Nav = () => {
               <Home size={18} />
               <span>Home</span>
             </a>
-            <a href="/" className="text-gray-700 hover:text-pink-600 transition-colors font-medium flex items-center space-x-1">
+            {/* <a href="/" className="text-gray-700 hover:text-pink-600 transition-colors font-medium flex items-center space-x-1">
               <BookOpen size={18} />
               <span>Blogs</span>
-            </a>
+            </a> */}
             <a href="/about" className="text-gray-700 hover:text-pink-600 transition-colors font-medium flex items-center space-x-1">
               <User size={18} />
               <span>About</span>
